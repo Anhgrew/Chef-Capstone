@@ -1,0 +1,77 @@
+# driver:
+#   name: dokken
+#   chef_version: latest
+#   privileged: true # because Docker and SystemD/Upstart
+
+# transport:
+#   name: dokken
+
+# provisioner:
+#   name: dokken
+
+# platforms:
+#   - name: centos-8
+#     driver:
+#       image: dokken/centos-8
+#       pid_one_command: /usr/lib/systemd/systemd
+#       #pid_one_command: /usr/sbin/init
+#       intermediate_instructions:
+#         - RUN yum -y install lsof which systemd-sysv initscripts net-tools
+
+# verifier:
+#   name: inspec
+
+# suites:
+#   - name: default
+#     run_list:
+#       - recipe[anhgrew::default]
+#     driver:
+#       hostname: nguyenanhdevops.chef
+#       intermediate_instructions:
+#         - RUN yum update -y
+#       ports:
+#         - 9999:80
+#     verifier:
+#       inspec_tests:
+#         - test/integration/default
+#     attributes:
+
+
+---
+driver:
+  name: vagrant
+
+## The forwarded_port port feature lets you connect to ports on the VM guest via
+## localhost on the host.
+## see also: https://www.vagrantup.com/docs/networking/forwarded_ports
+
+#  network:
+#    - ["forwarded_port", {guest: 80, host: 8080}]
+
+provisioner:
+  name: chef_zero
+  # You may wish to disable always updating cookbooks in CI or other testing environments.
+  # For example:
+  #   always_update_cookbooks: <%= !ENV['CI'] %>
+  always_update_cookbooks: true
+
+  ## product_name and product_version specifies a specific Chef product and version to install.
+  ## see the Chef documentation for more details: https://docs.chef.io/workstation/config_yml_kitchen/
+  #  product_name: chef
+  #  product_version: 17
+platforms:
+- name: ubuntu-16.04-desktop
+  driver:
+    box: learningchef/ubuntu1604-desktop
+
+verifier:
+  name: inspec
+
+suites:
+  - name: default
+    run_list:
+      - recipe[atom::default]
+    verifier:
+      inspec_tests:
+        - test/integration/default
+    attributes:
