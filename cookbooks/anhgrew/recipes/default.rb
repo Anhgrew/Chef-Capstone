@@ -38,7 +38,33 @@ when 'rhel'
   package 'epel-release' do
     action :install
   end
-# when 'debian'
+
+  package 'nginx' do
+    action :install
+  end
+
+  service 'nginx' do
+    action [:enable, :start]
+  end
+
+  template '/usr/share/nginx/html/index.html' do
+    source 'index.html.erb'
+    mode '0644'
+  end
+when 'debian'
+
+  package 'nginx' do
+    action :install
+  end
+
+  service 'nginx' do
+    action [:enable, :start]
+  end
+
+  template '/var/www/html/index.nginx-debian.html' do
+    source 'index.html.erb'
+    mode '0644'
+  end
 
 
 # when 'mac_os_x'
@@ -48,22 +74,13 @@ end
 
 
 
-package 'nginx' do
-  action :install
-end
-
-service 'nginx' do
-  action [:enable, :start]
-end
 
 
 
 
 
-template '/usr/share/nginx/html/index.html' do
-  source 'index.html.erb'
-  mode '0644'
-end
+
+
 
 
 include_recipe 'git'

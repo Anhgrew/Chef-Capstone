@@ -9,10 +9,16 @@
 #
 # Copyright:: 2017, The Authors, All Rights Reserved.
 
+
+
+
 case node['platform_family']
 when 'debian'
   puts "MISCHA: #{Chef::Config[:file_cache_path]}"
-  src = 'https://packages.chef.io/files/stable/chef-workstation/23.4.1032/ubuntu/22.04/chef-workstation_23.4.1032-1_amd64.deb'
+  breakpoint 'beginning' do
+    action :break
+  end
+  src = 'https://packages.chef.io/files/stable/chef-workstation/22.10.1013/ubuntu/16.04/chef-workstation_22.10.1013-1_amd64.deb'
   local_path = "#{Chef::Config[:file_cache_path]}/#{::File.basename(src)}"
   remote_file local_path do
     source src
